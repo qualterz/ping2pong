@@ -4,23 +4,23 @@ import random from 'random'
 
 import timers from 'node:timers'
 
-const readableKey = (buffer) => buffer.toString('hex');
+const asHexString = (buffer) => buffer.toString('hex');
 
 const swarm = new Hyperswarm()
 swarm.listen()
 
-const localPeerId = readableKey(swarm.keyPair.publicKey)
+const localPeerName = asHexString(swarm.keyPair.publicKey)
 
-console.log(`Started local peer: ${localPeerId}`)
+console.log(`Started local peer: ${localPeerName}`)
 
 swarm.on('connection', (connection) => {
-    const remotePeerId = readableKey(connection.remotePublicKey)
+    const remotePeerName = asHexString(connection.remotePublicKey)
 
-    console.log(`Connected to peer ${remotePeerId}`)
+    console.log(`Connected to peer ${remotePeerName}`)
     console.log(`${swarm.connections.size} peers are connected`)
 
     const pingTimer = setInterval(() => {
-        console.log(`Sending ping to peer ${remotePeerId}`)
+        console.log(`Sending ping to peer ${remotePeerName}`)
         new Promise(executor => setTimeout(executor, random.integer(3000, 24000)))
             .then(() => connection.write('ping'))
     }, 5000)
@@ -29,21 +29,21 @@ swarm.on('connection', (connection) => {
         const message = data.toString()
 
         if (message === 'ping') {
-            console.log(`Received ping from peer ${remotePeerId}`)
+            console.log(`Received ping from peer ${remotePeerName}`)
 
             connection.write('pong')
 
-            console.log(`Sent pong to peer ${remotePeerId}`)
+            console.log(`Sent pong to peer ${remotePeerName}`)
 
         } else if (message === 'pong') {
-            console.log(`Received pong from peer ${remotePeerId}`)
+            console.log(`Received pong from peer ${remotePeerName}`)
         } else {
             console.error(`Received invalid message: ${message}`)
         }
     })
 
     connection.on('error', () => {
-        console.log(`Disconnecting from peer ${remotePeerId}`)
+        console.log(`Disconnecting from peer ${remotePeerName}`)
 
         timers.clearInterval(pingTimer)
         connection.destroy()
