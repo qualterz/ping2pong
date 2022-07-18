@@ -2,6 +2,9 @@ Ping2Pong is an example of a peer-to-peer application. In this network, each pee
 
 ## Running application
 ```bash
+# Install dependenices
 npm install
+
+# Start application
 npm start
 ```
