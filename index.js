@@ -3,7 +3,7 @@ import Hyperswarm from 'hyperswarm'
 import random from 'random'
 import timers from 'node:timers'
 
-const asHexString = (buffer) => buffer.toString('hex');
+const asHexString = (buffer) => buffer.toString('hex')
 
 const swarm = new Hyperswarm()
 swarm.listen()
