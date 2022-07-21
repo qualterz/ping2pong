@@ -4,10 +4,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js"
+    "start": "node --experimental-json-modules index.js"
   },
   "dependencies": {
-    "config": "^3.3.7",
     "hyperswarm": "next",
     "random": "^3.0.6"
   }
