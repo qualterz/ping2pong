@@ -20,16 +20,14 @@ swarm.on('connection', (connection) => {
     console.log(`Connected to peer ${remotePeerName}`)
     console.log(`${swarm.connections.size} peers are connected`)
 
-    const interval = config.pingInterval
-    const delayMin = config.pingDelayMin
-    const delayMax = config.pingDelayMax
-
     // Send ping messages sometimes
     const pingTimer = setInterval(() => {
         console.log(`Sending ping to peer ${remotePeerName}`)
-        new Promise(executor => setTimeout(executor, random.integer(delayMin, delayMax)))
+
+        const min = config.pingDelayMin, max = config.pingDelayMax
+        new Promise(executor => setTimeout(executor, random.integer(min, max)))
             .then(() => connection.write('ping'))
-    }, interval)
+    }, config.pingInterval)
 
     connection.on('data', data => {
         const message = data.toString()
