@@ -2,6 +2,7 @@ import Hyperswarm from 'hyperswarm'
 
 import random from 'random'
 import timers from 'node:timers'
+import config from 'config'
 
 const asHexString = (buffer) => buffer.toString('hex')
 
@@ -18,12 +19,16 @@ swarm.on('connection', (connection) => {
     console.log(`Connected to peer ${remotePeerName}`)
     console.log(`${swarm.connections.size} peers are connected`)
 
+    const pingInterval = config.get('pingInterval')
+    const pingDelayMin = config.get('pingDelayMin')
+    const pingDelayMax = config.get('pingDelayMax')
+
     // Send ping messages sometimes
     const pingTimer = setInterval(() => {
         console.log(`Sending ping to peer ${remotePeerName}`)
-        new Promise(executor => setTimeout(executor, random.integer(3000, 24000)))
+        new Promise(executor => setTimeout(executor, random.integer(pingDelayMin, pingDelayMax)))
             .then(() => connection.write('ping'))
-    }, 5000)
+    }, pingInterval)
 
     connection.on('data', data => {
         const message = data.toString()
@@ -51,6 +56,6 @@ swarm.on('connection', (connection) => {
     })
 })
 
-const topic = Buffer.alloc(32).fill(1337)
+const topic = Buffer.alloc(32).fill(config.get('topicKey'))
 const discovery = swarm.join(topic)
 await discovery.flushed()

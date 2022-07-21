@@ -1,0 +1,8 @@
+{
+    "topicKey": 1337,
+
+    "pingInterval": 5000,
+
+    "pingDelayMin": 3000,
+    "pingDelayMax": 24000
+}
